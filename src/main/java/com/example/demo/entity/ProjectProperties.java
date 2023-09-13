@@ -14,7 +14,9 @@ public class ProjectProperties {
   @Value("${aws.s3.secretKey}")
   private String secretKey;
 
+  @Value("${aws.s3.bucketName}")
   private String bucketName;
+
   private String region;
 
   public String getAccessKey() {

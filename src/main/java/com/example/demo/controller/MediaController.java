@@ -27,9 +27,15 @@ public class MediaController {
   private ProjectProperties projectProperties;
 
   @GetMapping("/medias/raw")
-  String getMedia(@RequestParam(required = true, name = "mediaId") Integer mediaId) {
+  String getMedia(
+      @RequestParam(required = true, name = "cid") Integer cid,
+      @RequestParam(required = true, name = "pexid") Integer pexid,
+      @RequestParam(required = true, name = "mediaId") String mediaId,
+      @RequestParam(required = true, name = "filename") String filename,
+      @RequestParam(required = true, name = "bucketName") String bucketName,
+      @RequestParam(required = true, name = "qualifier") String qualifier) {
 
-    return mediaService.getRawUrl(mediaId);
+    return mediaService.getRawUrl(cid, pexid, mediaId, filename, qualifier);
   }
 
   @GetMapping("/buckets")

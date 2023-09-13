@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.example.demo.entity.Media;
+import com.example.demo.entity.ProjectProperties;
 import com.example.demo.repository.MediaRepository;
 
 @Service
@@ -22,19 +24,34 @@ public class MediaService {
   @Autowired
   private MediaRepository mediaRepository;
 
+  @Autowired
+  private ProjectProperties projectProperties;
+
   public List<Media> getAllMedia() {
     return mediaRepository.findAll();
   }
 
-  public String getRawUrl(Integer mediaId) {
+  public String getRawUrl(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier) {
 
-    Media media = mediaRepository.findById(mediaId.longValue()).orElse(null);
+    return buildS3Url(cid, projectExternalId, mediaId, filename, qualifier);
+  }
 
-    if (media == null) {
-      return null;
-    }
+  private String buildS3Url(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier) {
+    return "http://" + projectProperties.getBucketName() + ".s3.amazonaws.com"
+        + buildUrlPath(cid, projectExternalId, mediaId, filename, qualifier);
+  }
 
-    return media.getRawUrl();
+  public String buildUrlPath(Integer clientId, Integer projectExternalId, String mediaId,
+      String filename, String qualifier) {
+    // create a "yyyy-mm-dd" string
+    String date = String
+        .format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
+    String externalId = projectExternalId != null ? projectExternalId.toString() : "undefined";
+
+    return "/account/"
+        + clientId + "/" + externalId + "/" + date + "/"
+        + qualifier.toLowerCase() + "/" + mediaId + "/"
+        + filename;
   }
 
   public Media createMedia() {
