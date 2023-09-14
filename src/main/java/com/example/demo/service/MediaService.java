@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -31,25 +30,24 @@ public class MediaService {
     return mediaRepository.findAll();
   }
 
-  public String getRawUrl(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier) {
+  public String getRawUrl(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier,
+      String postDate) {
 
-    return buildS3Url(cid, projectExternalId, mediaId, filename, qualifier);
+    return buildS3Url(cid, projectExternalId, mediaId, filename, qualifier, postDate);
   }
 
-  private String buildS3Url(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier) {
+  private String buildS3Url(Integer cid, Integer projectExternalId, String mediaId, String filename, String qualifier,
+      String postDate) {
     return "http://" + projectProperties.getBucketName() + ".s3.amazonaws.com"
-        + buildUrlPath(cid, projectExternalId, mediaId, filename, qualifier);
+        + buildUrlPath(cid, projectExternalId, mediaId, filename, qualifier, postDate);
   }
 
   public String buildUrlPath(Integer clientId, Integer projectExternalId, String mediaId,
-      String filename, String qualifier) {
-    // create a "yyyy-mm-dd" string
-    String date = String
-        .format("%1$tY-%1$tm-%1$td", Calendar.getInstance());
+      String filename, String qualifier, String postDate) {
     String externalId = projectExternalId != null ? projectExternalId.toString() : "undefined";
 
     return "/account/"
-        + clientId + "/" + externalId + "/" + date + "/"
+        + clientId + "/" + externalId + "/" + postDate + "/"
         + qualifier.toLowerCase() + "/" + mediaId + "/"
         + filename;
   }

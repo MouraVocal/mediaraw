@@ -33,9 +33,10 @@ public class MediaController {
       @RequestParam(required = true, name = "mediaId") String mediaId,
       @RequestParam(required = true, name = "filename") String filename,
       @RequestParam(required = true, name = "bucketName") String bucketName,
-      @RequestParam(required = true, name = "qualifier") String qualifier) {
+      @RequestParam(required = true, name = "qualifier") String qualifier,
+      @RequestParam(required = true, name = "postDate") String postDate) {
 
-    return mediaService.getRawUrl(cid, pexid, mediaId, filename, qualifier);
+    return mediaService.getRawUrl(cid, pexid, mediaId, filename, qualifier, postDate);
   }
 
   @GetMapping("/buckets")
